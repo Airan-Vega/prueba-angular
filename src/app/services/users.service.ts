@@ -12,6 +12,10 @@ export class UsersService {
   constructor(private http: HttpClient) {}
 
   getUsers(page: number = 1) {
-    return this.http.get<IUser>(`${path_url}/api/users?page=${page}&delay=3`);
+    return this.http.get<IUser>(`${path_url}?page=${page}&delay=3`);
+  }
+
+  deleteUser(id: number) {
+    return this.http.delete(`${path_url}/${id}`);
   }
 }

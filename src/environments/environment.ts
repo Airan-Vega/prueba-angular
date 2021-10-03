@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  path_url: 'https://reqres.in',
+  path_url: 'https://reqres.in/api/users',
 };
 
 /*

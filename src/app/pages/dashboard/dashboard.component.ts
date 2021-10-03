@@ -3,6 +3,7 @@ import { UsersService } from '../../services/users.service';
 import { Data } from '../../models/users';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,6 +39,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.pageSize = users.per_page;
         this.loading = false;
       });
+  }
+
+  delete(user: Data) {
+    Swal.fire({
+      title: '¿Borrar usuario?',
+      text: `Esta a punto de borrar a ${user.first_name} ${user.last_name}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, borrar usuario',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usersService
+          .deleteUser(user.id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(() => {
+            Swal.fire(
+              'Usuario borrado',
+              `${user.first_name} ${user.last_name} fue eliminado correctamente`,
+              'success'
+            );
+            this.userData = this.userData.filter(
+              (users) => users.id !== user.id
+            );
+          });
+      }
+    });
   }
 
   changePage(event: any) {

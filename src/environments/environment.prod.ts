@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  path_url: 'https://reqres.in',
+  path_url: 'https://reqres.in/api/users',
 };
