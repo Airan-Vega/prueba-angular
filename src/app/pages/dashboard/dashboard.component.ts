@@ -1,9 +1,12 @@
+import { IRegisterFormUser } from './../../models/users';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { Data } from '../../models/users';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalFormComponent } from '../../shared/components/modal-form/modal-form.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,12 +17,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   public userData: Data[] = [];
-  public collectionSize: number = 0;
+  public collectionSize: number;
   public page: number = 1;
-  public pageSize: number = 0;
+  public pageSize: number;
   public loading: boolean = true;
+  public newUser: IRegisterFormUser[] = [];
 
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -41,7 +48,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  delete(user: Data) {
+  createUser() {
+    const modalRef = this.modalService.open(ModalFormComponent);
+    modalRef.closed.pipe(first()).subscribe((dataForm: IRegisterFormUser) => {
+      this.usersService.createUser(dataForm).subscribe((newUser) => {
+        this.newUser.push(newUser);
+      });
+    });
+  }
+
+  deleteUser(user: Data) {
     Swal.fire({
       title: '¿Borrar usuario?',
       text: `Esta a punto de borrar a ${user.first_name} ${user.last_name}`,
@@ -65,6 +81,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
               (users) => users.id !== user.id
             );
           });
+      }
+    });
+  }
+
+  deleteNewUser(user: IRegisterFormUser) {
+    Swal.fire({
+      title: '¿Borrar usuario?',
+      text: `Esta a punto de borrar a ${user.name}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, borrar usuario',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Usuario borrado',
+          `${user.name}  fue eliminado correctamente`,
+          'success'
+        );
+        this.newUser = this.newUser.filter((users) => users.id !== user.id);
       }
     });
   }

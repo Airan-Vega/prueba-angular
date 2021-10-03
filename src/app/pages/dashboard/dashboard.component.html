@@ -4,7 +4,7 @@
   </div>
 
   <ng-container *ngIf="!loading">
-    <table class="table table-striped">
+    <table class="table table-striped mt-3">
       <thead>
         <tr>
           <th scope="col">Avatar</th>
@@ -29,8 +29,7 @@
           <td>{{ user.last_name }}</td>
           <td>{{ user.email }}</td>
           <td>
-            <button class="btn btn-warning mr-3">Edit</button>
-            <button class="btn btn-danger" (click)="delete(user)">
+            <button class="btn btn-danger" (click)="deleteUser(user)">
               Delete
             </button>
           </td>
@@ -52,4 +51,35 @@
       </ngb-pagination>
     </div>
   </ng-container>
+</div>
+
+<div class="container mt-5">
+  <h1>New Users</h1>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="createUser()">Create User</button>
+  </div>
+
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Job</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of newUser">
+        <td>
+          {{ user.name }}
+        </td>
+        <td>{{ user.job }}</td>
+        <td>
+          <button class="btn btn-warning mr-3">Edit</button>
+          <button class="btn btn-danger" (click)="deleteNewUser(user)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

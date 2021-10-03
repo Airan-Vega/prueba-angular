@@ -19,3 +19,10 @@ export interface Data {
   last_name: string;
   avatar: string;
 }
+
+export interface IRegisterFormUser {
+  id: string;
+  name: string;
+  job: string;
+  createdAt: string;
+}

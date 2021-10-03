@@ -1,0 +1,27 @@
+<div class="modal-body">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        formControlName="name"
+      />
+      <small class="form-text text-danger" *ngIf="form.value.name === ''"
+        >El name es obligatorio</small
+      >
+    </div>
+    <div class="form-group">
+      <label for="job">Job *</label>
+      <input type="text" class="form-control" id="job" formControlName="job" />
+      <small class="form-text text-danger" *ngIf="form.value.job === ''"
+        >El job es obligatorio</small
+      >
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+      Save
+    </button>
+  </form>
+</div>
