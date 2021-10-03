@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { IUser, IRegisterFormUser } from '../models/users';
+import { IUser, IFormUser } from '../models/users';
 
 const path_url = environment.path_url;
 
@@ -15,8 +15,12 @@ export class UsersService {
     return this.http.get<IUser>(`${path_url}?page=${page}&delay=3`);
   }
 
-  createUser(formData: IRegisterFormUser) {
-    return this.http.post<IRegisterFormUser>(`${path_url}`, formData);
+  createUser(formData: IFormUser) {
+    return this.http.post<IFormUser>(`${path_url}`, formData);
+  }
+
+  editUser(id: string, formData: IFormUser) {
+    return this.http.put<IFormUser>(`${path_url}/${id}`, formData);
   }
 
   deleteUser(id: number) {

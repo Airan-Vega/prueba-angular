@@ -1,4 +1,4 @@
-import { IRegisterFormUser } from './../../models/users';
+import { IFormUser } from './../../models/users';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { Data } from '../../models/users';
@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public page: number = 1;
   public pageSize: number;
   public loading: boolean = true;
-  public newUser: IRegisterFormUser[] = [];
+  public newUser: IFormUser[] = [];
 
   constructor(
     private usersService: UsersService,
@@ -50,10 +50,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   createUser() {
     const modalRef = this.modalService.open(ModalFormComponent);
-    modalRef.closed.pipe(first()).subscribe((dataForm: IRegisterFormUser) => {
-      this.usersService.createUser(dataForm).subscribe((newUser) => {
-        this.newUser.push(newUser);
-      });
+    modalRef.closed.pipe(first()).subscribe((dataForm: IFormUser) => {
+      this.usersService
+        .createUser(dataForm)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((newUser) => {
+          this.newUser.push(newUser);
+        });
     });
   }
 
@@ -85,7 +88,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteNewUser(user: IRegisterFormUser) {
+  editNewUser(idUser: string, i: number) {
+    const modalRef = this.modalService.open(ModalFormComponent);
+    modalRef.componentInstance.value = this.newUser[i];
+    modalRef.closed.pipe(first()).subscribe((formData: IFormUser) => {
+      this.usersService
+        .editUser(idUser, formData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((resp) => {
+          this.newUser[i] = resp;
+        });
+    });
+  }
+
+  deleteNewUser(user: IFormUser) {
     Swal.fire({
       title: '¿Borrar usuario?',
       text: `Esta a punto de borrar a ${user.name}`,

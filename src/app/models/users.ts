@@ -20,7 +20,7 @@ export interface Data {
   avatar: string;
 }
 
-export interface IRegisterFormUser {
+export interface IFormUser {
   id: string;
   name: string;
   job: string;

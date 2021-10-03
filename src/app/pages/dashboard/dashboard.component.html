@@ -53,7 +53,7 @@
   </ng-container>
 </div>
 
-<div class="container mt-5">
+<div class="container mt-5" *ngIf="!loading">
   <h1>New Users</h1>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="createUser()">Create User</button>
@@ -68,13 +68,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of newUser">
+      <tr *ngFor="let user of newUser; let i = index">
         <td>
           {{ user.name }}
         </td>
         <td>{{ user.job }}</td>
         <td>
-          <button class="btn btn-warning mr-3">Edit</button>
+          <button
+            class="btn btn-warning mr-3"
+            (click)="editNewUser(user.id, i)"
+          >
+            Edit
+          </button>
           <button class="btn btn-danger" (click)="deleteNewUser(user)">
             Delete
           </button>
